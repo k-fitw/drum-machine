@@ -54,6 +54,7 @@ const audioClips: AudioClip[] = [
 function App() {
 
   const [power, setPower] = useState<boolean>(true);
+  const [volume, setVolume] = useState<number>(100);
 
   const playAudio = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if(!power) return;
@@ -70,6 +71,18 @@ const togglePower = () => {
   setPower(!power);
 }
 
+const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const newVolume = parseInt(e.target.value, 10);
+  setVolume(newVolume);
+
+  const audioElements = document.getElementsByTagName('audio');
+  for (let i = 0; i < audioElements.length; i++) {
+    audioElements[i].volume = newVolume / 100;
+  }
+
+  document.getElementById('display')!.innerText = `Volume: ${newVolume}`;
+};
+
   return (
     <>
       <div className="container" id="drum-machine" onKeyDown={playAudio}>
@@ -85,7 +98,7 @@ const togglePower = () => {
         <button onClick={togglePower}></button>
         <div id="display"></div>
         <div id="volume">
-          <input type="range" min="0" max="100" defaultValue="100"/>
+          <input type="range" min="0" max="100" defaultValue="100" value={volume} onChange={handleVolumeChange}/>
         </div>
         <h3>Bank</h3>
         <button></button>
